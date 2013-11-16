@@ -77,10 +77,18 @@ ifneq ($(BOARD_SYSTEMIMAGE_PARTITION_SIZE),)
     LOCAL_CFLAGS += -DBOARD_SYSTEMIMAGE_PARTITION_SIZE=$(BOARD_SYSTEMIMAGE_PARTITION_SIZE)
 endif
 
-ifndef DEVICE_RESOLUTION
+ifeq ($(DEVICE_RESOLUTION),)
 $(warning ********************************************************************************)
 $(warning * DEVICE_RESOLUTION is NOT SET in BoardConfig.mk )
 $(warning * Please see http://tinyw.in/nP7d for details    )
+$(warning ********************************************************************************)
+$(error stopping)
+endif
+
+ifeq "$(wildcard bootable/recovery/gui/devices/$(DEVICE_RESOLUTION))" ""
+$(warning ********************************************************************************)
+$(warning * DEVICE_RESOLUTION ($(DEVICE_RESOLUTION)) does NOT EXIST in bootable/recovery/gui/devices )
+$(warning * Please choose an existing theme or create a new one for your device )
 $(warning ********************************************************************************)
 $(error stopping)
 endif
