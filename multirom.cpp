@@ -1154,14 +1154,14 @@ int MultiROM::decompressRamdisk(const char *src, const char* dest)
 	}
 	fclose(f);
 
-        //Xperia needs extra extraction: gzip -d -c ramdisk.cpio.gz | cpio -i && rm init && cpio -i < sbin/ramdisk.cpio && rm -r sbin
+        //Xperia needs extra extraction: gzip -d -c ramdisk.cpio.gz | cpio -i -u && cpio -i -u < sbin/ramdisk.cpio
      
         char cmd[256];
         // gzip
         if(*((uint16_t*)m) == 0x8B1F)
         {
                 gui_print("Ramdisk uses GZIP compression\n");
-                sprintf(cmd, "cd \"%s\" && gzip -c | cpio -i && rm init && cpio -i -d \"%s\" < sbin/ramdisk.cpio && rm -r sbin", dest, src);
+                sprintf(cmd, "cd \"%s\" && gzip -c -d \"%s\" | cpio -i -u && cpio -i -u -d < sbin/ramdisk.cpio", dest, src);
                 system(cmd);
                 return CMPR_GZIP;
         }
@@ -1169,7 +1169,7 @@ int MultiROM::decompressRamdisk(const char *src, const char* dest)
         else if(*((uint32_t*)m) == 0x184C2102)
         {
                 gui_print("Ramdisk uses LZ4 compression\n");
-                sprintf(cmd, "cd \"%s\" && lz4 stdout | cpio -i && rm init && cpio -i -d \"%s\" < sbin/ramdisk.cpio && rm -r sbin", dest, src);
+                sprintf(cmd, "cd \"%s\" && lz4 stdout | cpio -i -u && cpio -i -u -d < sbin/ramdisk.cpio", dest, src);
                 system(cmd);
                 return CMPR_LZ4;
         }
@@ -1177,7 +1177,7 @@ int MultiROM::decompressRamdisk(const char *src, const char* dest)
         else if(*((uint32_t*)m) == 0x0000005D || *((uint32_t*)m) == 0x8000005D)
         {
                 gui_print("Ramdisk uses LZMA compression\n");
-                sprintf(cmd, "cd \"%s\" && lzma -c | cpio -i && rm init && cpio -i -d \"%s\" < sbin/ramdisk.cpio && rm -r sbin", dest, src);
+                sprintf(cmd, "cd \"%s\" && lzma -c -d \"%s\" | cpio -u -i cpio -i -u -d < sbin/ramdisk.cpio", dest, src);
                 system(cmd);
                 return CMPR_LZMA;
         }
