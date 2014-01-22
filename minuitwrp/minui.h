@@ -25,6 +25,8 @@ void gr_exit(void);
 
 int gr_fb_width(void);
 int gr_fb_height(void);
+int gr_screen_width(void);
+int gr_screen_height(void);
 gr_pixel *gr_fb_data(void);
 void gr_flip(void);
 int gr_fb_blank(int blank);
